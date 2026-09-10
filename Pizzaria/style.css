@@ -1,0 +1,474 @@
+
+/* LA PIZZA - CSS MUITO FEIO */
+
+body {
+    margin: 0;
+    font-family: "Comic Sans MS", Arial;
+    background-color: yellow;
+    color: purple;
+}
+
+/* CONTAINER */
+
+.container {
+    width: 95%;
+    margin: auto;
+}
+
+
+/* CABEÇALHO */
+
+header {
+    background-color: hotpink;
+    padding: 35px;
+    border: 10px dotted blue;
+}
+
+.header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: green;
+    font-size: 50px;
+    text-decoration: underline;
+}
+
+.nav {
+    display: flex;
+    gap: 5px;
+}
+
+.nav a {
+    background-color: orange;
+    color: blue;
+    padding: 12px;
+    border: 4px solid purple;
+    text-decoration: underline;
+    font-size: 18px;
+}
+
+.nav a:hover {
+    background-color: lime;
+    color: red;
+}
+
+.header-cta {
+    background-color: red;
+    color: yellow;
+}
+
+
+/* BOTÕES */
+
+.btn {
+    padding: 15px;
+    border-radius: 0;
+    border: 5px solid blue;
+    font-size: 18px;
+}
+
+.btn-primary {
+    background-color: lime;
+    color: red;
+}
+
+.btn-primary:hover {
+    background-color: purple;
+    color: yellow;
+}
+
+.btn-outline {
+    background-color: pink;
+    color: green;
+    border: 8px double red;
+}
+
+.btn-small {
+    padding: 8px;
+}
+
+
+/* INÍCIO */
+
+.hero {
+    background-color: cyan;
+    padding: 100px 0;
+    border-bottom: 15px solid red;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+}
+
+.hero h1 {
+    font-size: 65px;
+    color: red;
+    background-color: yellow;
+    border: 8px solid purple;
+}
+
+.eyebrow {
+    color: blue;
+    background-color: pink;
+    font-size: 25px;
+}
+
+.hero-text {
+    background-color: orange;
+    color: purple;
+    padding: 20px;
+    font-size: 25px;
+}
+
+.hero-actions {
+    margin-top: 40px;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 50px;
+    margin-top: 60px;
+}
+
+.hero-stats strong {
+    font-size: 40px;
+    color: blue;
+}
+
+.hero-media img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border: 15px dashed green;
+}
+
+
+/* SEÇÕES */
+
+section {
+    padding: 80px 0;
+}
+
+.section-head {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-head h2 {
+    color: red;
+    background-color: lime;
+    font-size: 50px;
+    border: 10px dotted purple;
+    text-decoration: underline;
+}
+
+.section-text {
+    background-color: pink;
+    color: blue;
+    padding: 15px;
+    font-size: 20px;
+}
+
+
+/* CARDÁPIO */
+
+.menu {
+    background-color: orange;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.menu-card {
+    background-color: lime;
+    border: 10px solid blue;
+    padding: 15px;
+}
+
+.menu-card-img img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border: 8px solid red;
+}
+
+.menu-card-body {
+    padding: 15px;
+}
+
+.menu-card-top {
+    display: flex;
+    justify-content: space-between;
+}
+
+.menu-card h3 {
+    color: purple;
+    font-size: 30px;
+    text-decoration: underline;
+}
+
+.price {
+    color: red;
+    background-color: yellow;
+    font-size: 25px;
+}
+
+.menu-card p {
+    background-color: cyan;
+    color: red;
+    padding: 15px;
+}
+
+
+/* SOBRE */
+
+.about {
+    background-color: pink;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+}
+
+.about-media img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border: 15px dotted blue;
+}
+
+.about-content h2 {
+    color: green;
+    background-color: yellow;
+    font-size: 50px;
+}
+
+.about-content p {
+    background-color: orange;
+    color: purple;
+    padding: 20px;
+    font-size: 20px;
+}
+
+
+/* GALERIA */
+
+.gallery {
+    background-color: lime;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+}
+
+.gallery-item {
+    height: 300px;
+    background-color: pink;
+    border: 12px solid red;
+    padding: 5px;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* DIFERENCIAIS */
+
+.differentials {
+    background-color: purple;
+    border: 15px solid yellow;
+}
+
+.differentials .section-head h2 {
+    color: red;
+    background-color: cyan;
+}
+
+.differentials-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.differential-card {
+    background-color: orange;
+    border: 10px dotted blue;
+    padding: 25px;
+    text-align: center;
+}
+
+.differential-icon {
+    font-size: 60px;
+}
+
+.differential-card h3 {
+    color: green;
+    font-size: 25px;
+}
+
+.differential-card p {
+    background-color: yellow;
+    color: red;
+}
+
+
+/* CONTATO */
+
+.contact {
+    background-color: cyan;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+}
+
+.contact-info h2 {
+    color: red;
+    background-color: yellow;
+    font-size: 50px;
+}
+
+.info-list {
+    background-color: pink;
+    border: 8px solid green;
+    padding: 30px;
+}
+
+.info-list li {
+    margin-bottom: 25px;
+}
+
+.info-label {
+    color: blue;
+    font-size: 20px;
+}
+
+.social-links {
+    display: flex;
+    gap: 5px;
+}
+
+.social-links a {
+    background-color: red;
+    color: yellow;
+    padding: 15px;
+    border: 5px solid purple;
+}
+
+
+/* FORMULÁRIO */
+
+.contact-form {
+    background-color: hotpink;
+    border: 10px dashed green;
+    padding: 30px;
+}
+
+.form-field {
+    margin-bottom: 25px;
+}
+
+.form-field label {
+    display: block;
+    color: blue;
+    background-color: yellow;
+    font-size: 20px;
+}
+
+.form-field input,
+.form-field textarea {
+    width: 100%;
+    padding: 15px;
+    border: 7px solid red;
+    background-color: lime;
+    box-sizing: border-box;
+}
+
+.form-field textarea {
+    height: 150px;
+}
+
+.form-submit {
+    width: 100%;
+    background-color: purple;
+    color: yellow;
+    border: 8px solid orange;
+    padding: 20px;
+}
+
+
+/* RODAPÉ */
+
+.footer {
+    background-color: red;
+    color: yellow;
+    text-align: center;
+    padding: 40px;
+    border-top: 15px dotted blue;
+}
+
+
+/* CELULAR */
+
+@media (max-width: 700px) {
+
+    .header-inner {
+        display: block;
+        text-align: center;
+    }
+
+    .nav {
+        display: block;
+    }
+
+    .nav a {
+        display: block;
+        margin: 8px;
+    }
+
+    .hero-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .differentials-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 40px;
+    }
+}
+
