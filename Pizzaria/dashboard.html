@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="PT-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Conta - Pizza e Cia</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="nav-links">
+                <a href="/index.html">Início</a>
+                <a href="/index.html#Contato">Contato</a>
+            </div>
+            <div class="nav-acoes">
+                <button class="icone-btn" id="btnSair">Sair</button>
+            </div>
+        </nav>
+    </header>
+
+    <section class="dashboard-secao">
+        <div class="dashboard-topo">
+            <h1>Olá, <span id="dashboardNome">...</span>!</h1>
+            <p id="dashboardEmail" class="dashboard-email"></p>
+        </div>
+
+        <div class="dashboard-cards">
+            <div class="dashboard-card">
+                <h3>Meus Pedidos</h3>
+                <p class="dashboard-numero" id="totalPedidos">0</p>
+                <p class="dashboard-legenda">Nenhum pedido finalizado ainda. Assim que a loja registrar pedidos, eles vão aparecer aqui.</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>Minhas Pizzas Favoritas</h3>
+                <p class="dashboard-numero" id="totalFavoritos">0</p>
+                <p class="dashboard-legenda">Pizzas que você favoritou no cardápio.</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>Meus Dados</h3>
+                <p class="dashboard-legenda">Nome: <strong id="dadosNome">-</strong></p>
+                <p class="dashboard-legenda">E-mail: <strong id="dadosEmail">-</strong></p>
+            </div>
+        </div>
+    </section>
+
+    <footer id="Contato">
+        <div class="footer-conteudo">
+            <div class="footer-bloco">
+                <h4>Pizza e Cia</h4>
+                <p>Forno a lenha e tradição artesanal desde sempre.</p>
+            </div>
+            <div class="footer-bloco">
+                <h4>Contato</h4>
+                <p>(34) 99999-9999</p>
+                <p>contato@pizzaecia.com.br</p>
+            </div>
+            <div class="footer-bloco">
+                <h4>Horário</h4>
+                <p>Terça a domingo</p>
+                <p>18h às 23h</p>
+            </div>
+        </div>
+        <p class="footer-copy">&copy; 2026 Pizza e Cia. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- SDK do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/supabase-config.js"></script>
+    <script src="/auth.js"></script>
+    <script>
+        async function carregarDashboard() {
+            const sessao = await protegerRota(); // redireciona para login.html se não houver sessão
+            if (!sessao) return;
+
+            const usuario = sessao.user;
+            const nomeMetadados = usuario.user_metadata?.nome;
+
+            document.getElementById("dashboardEmail").textContent = usuario.email;
+            document.getElementById("dadosEmail").textContent = usuario.email;
+
+            // Tenta buscar o perfil completo na tabela "perfis"
+            const { data: perfil } = await obterPerfil(usuario.id);
+            const nome = perfil?.nome || nomeMetadados || usuario.email;
+
+            document.getElementById("dashboardNome").textContent = nome;
+            document.getElementById("dadosNome").textContent = nome;
+
+            // Favoritos salvos localmente no cardápio (mesma lógica do index.html)
+            const favoritos = JSON.parse(localStorage.getItem("pizzaecia_favoritos")) || [];
+            document.getElementById("totalFavoritos").textContent = favoritos.length;
+
+            // Pedidos finalizados (salvos em finalizar-pedido.html)
+            const pedidos = JSON.parse(localStorage.getItem("pizzaecia_pedidos")) || [];
+            document.getElementById("totalPedidos").textContent = pedidos.length;
+        }
+
+        document.getElementById("btnSair").addEventListener("click", sairUsuario);
+
+        carregarDashboard();
+    </script>
+</body>
+</html>

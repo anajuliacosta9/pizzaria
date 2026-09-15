@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="PT-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar - Pizza e Cia</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="nav-links">
+                <a href="/index.html">Início</a>
+                <a href="/index.html#Contato">Contato</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="auth-secao">
+        <div class="auth-card">
+            <div class="auth-abas">
+                <button class="auth-aba ativa" id="abaEntrar" data-aba="entrar">Entrar</button>
+                <button class="auth-aba" id="abaCadastrar" data-aba="cadastrar">Criar conta</button>
+            </div>
+
+            <p class="auth-erro" id="mensagemAuth"></p>
+
+            <!-- Formulário de login -->
+            <form class="auth-form" id="formEntrar">
+                <label for="entrarEmail">E-mail</label>
+                <input type="email" id="entrarEmail" required placeholder="seuemail@exemplo.com">
+
+                <label for="entrarSenha">Senha</label>
+                <input type="password" id="entrarSenha" required placeholder="••••••••">
+
+                <button type="submit" class="auth-botao">Entrar</button>
+            </form>
+
+            <!-- Formulário de cadastro -->
+            <form class="auth-form escondido" id="formCadastrar">
+                <label for="cadastrarNome">Nome</label>
+                <input type="text" id="cadastrarNome" required placeholder="Seu nome">
+
+                <label for="cadastrarEmail">E-mail</label>
+                <input type="email" id="cadastrarEmail" required placeholder="seuemail@exemplo.com">
+
+                <label for="cadastrarSenha">Senha</label>
+                <input type="password" id="cadastrarSenha" required minlength="6" placeholder="Mínimo 6 caracteres">
+
+                <button type="submit" class="auth-botao">Criar conta</button>
+            </form>
+        </div>
+    </section>
+
+    <footer id="Contato">
+        <div class="footer-conteudo">
+            <div class="footer-bloco">
+                <h4>Pizza e Cia</h4>
+                <p>Forno a lenha e tradição artesanal desde sempre.</p>
+            </div>
+            <div class="footer-bloco">
+                <h4>Contato</h4>
+                <p>(34) 99999-9999</p>
+                <p>contato@pizzaecia.com.br</p>
+            </div>
+            <div class="footer-bloco">
+                <h4>Horário</h4>
+                <p>Terça a domingo</p>
+                <p>18h às 23h</p>
+            </div>
+        </div>
+        <p class="footer-copy">&copy; 2026 Pizza e Cia. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- SDK do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/supabase-config.js"></script>
+    <script src="/auth.js"></script>
+    <script>
+        const abaEntrar = document.getElementById("abaEntrar");
+        const abaCadastrar = document.getElementById("abaCadastrar");
+        const formEntrar = document.getElementById("formEntrar");
+        const formCadastrar = document.getElementById("formCadastrar");
+        const mensagemAuth = document.getElementById("mensagemAuth");
+
+        function mostrarErro(texto) {
+            mensagemAuth.textContent = texto;
+            mensagemAuth.classList.add("visivel");
+        }
+
+        function limparErro() {
+            mensagemAuth.textContent = "";
+            mensagemAuth.classList.remove("visivel");
+        }
+
+        abaEntrar.addEventListener("click", () => {
+            abaEntrar.classList.add("ativa");
+            abaCadastrar.classList.remove("ativa");
+            formEntrar.classList.remove("escondido");
+            formCadastrar.classList.add("escondido");
+            limparErro();
+        });
+
+        abaCadastrar.addEventListener("click", () => {
+            abaCadastrar.classList.add("ativa");
+            abaEntrar.classList.remove("ativa");
+            formCadastrar.classList.remove("escondido");
+            formEntrar.classList.add("escondido");
+            limparErro();
+        });
+
+        formEntrar.addEventListener("submit", async (evento) => {
+            evento.preventDefault();
+            limparErro();
+            const email = document.getElementById("entrarEmail").value;
+            const senha = document.getElementById("entrarSenha").value;
+
+            const { error } = await entrarUsuario(email, senha);
+            if (error) {
+                mostrarErro("Não foi possível entrar: " + error.message);
+                return;
+            }
+            window.location.href = "dashboard.html";
+        });
+
+        formCadastrar.addEventListener("submit", async (evento) => {
+            evento.preventDefault();
+            limparErro();
+            const nome = document.getElementById("cadastrarNome").value;
+            const email = document.getElementById("cadastrarEmail").value;
+            const senha = document.getElementById("cadastrarSenha").value;
+
+            const { data, error } = await cadastrarUsuario(nome, email, senha);
+            if (error) {
+                mostrarErro("Não foi possível criar a conta: " + error.message);
+                return;
+            }
+
+            // Se a confirmação por e-mail estiver ativada no Supabase,
+            // não haverá sessão ainda — avisamos o usuário em vez de redirecionar.
+            if (!data.session) {
+                mostrarErro("Conta criada! Verifique seu e-mail para confirmar antes de entrar.");
+                return;
+            }
+
+            window.location.href = "dashboard.html";
+        });
+    </script>
+</body>
+</html>

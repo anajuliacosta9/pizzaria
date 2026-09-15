@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="PT-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Pedido - Pizza e Cia</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="nav-links">
+                <a href="/index.html">Início</a>
+                <a href="/index.html#Contato">Contato</a>
+            </div>
+            <div class="nav-acoes">
+                <a class="icone-btn" id="btnConta" href="login.html">Entrar</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="pedido-secao">
+        <h1>Finalizar Pedido</h1>
+
+        <!-- Estado: carrinho vazio -->
+        <div class="pedido-vazio escondido" id="blocoCarrinhoVazio">
+            <p>Seu carrinho está vazio.</p>
+            <a class="botao-principal" href="/index.html#secaoPizzas">Ver Cardápio</a>
+        </div>
+
+        <!-- Estado: formulário -->
+        <div class="pedido-grade" id="blocoFormulario">
+            <form class="pedido-form" id="formPedido">
+                <h3>Seus Dados</h3>
+
+                <label for="pedidoNome">Nome completo</label>
+                <input type="text" id="pedidoNome" required placeholder="Seu nome">
+
+                <label for="pedidoTelefone">Telefone / WhatsApp</label>
+                <input type="tel" id="pedidoTelefone" required placeholder="(34) 99999-9999">
+
+                <label for="pedidoEndereco">Endereço de entrega</label>
+                <textarea id="pedidoEndereco" required placeholder="Rua, número, bairro, complemento"></textarea>
+
+                <label>Forma de pagamento</label>
+                <div class="forma-pagamento-opcoes" id="opcoesPagamento">
+                    <label class="opcao-pagamento">
+                        <input type="radio" name="pagamento" value="Dinheiro" required>
+                        <span>💵 Dinheiro</span>
+                    </label>
+                    <label class="opcao-pagamento">
+                        <input type="radio" name="pagamento" value="Cartão">
+                        <span>💳 Cartão</span>
+                    </label>
+                    <label class="opcao-pagamento">
+                        <input type="radio" name="pagamento" value="Pix">
+                        <span>📱 Pix</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="auth-botao">Confirmar Pedido</button>
+            </form>
+
+            <div class="resumo-pedido">
+                <h3>Resumo do Pedido</h3>
+                <div id="listaResumoPedido"></div>
+                <div class="total-linha">
+                    <span>Total</span>
+                    <span id="totalResumoPedido">R$ 0,00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estado: confirmação -->
+        <div class="pedido-confirmado escondido" id="blocoConfirmacao">
+            <div class="pedido-confirmado-icone">✓</div>
+            <h2>Pedido confirmado!</h2>
+            <p>Obrigado, <strong id="confirmacaoNome"></strong>! Seu pedido foi registrado e logo entraremos em contato pelo telefone <strong id="confirmacaoTelefone"></strong>.</p>
+
+            <div class="resumo-pedido resumo-confirmacao">
+                <p><strong>Endereço:</strong> <span id="confirmacaoEndereco"></span></p>
+                <p><strong>Pagamento:</strong> <span id="confirmacaoPagamento"></span></p>
+                <div id="confirmacaoItens"></div>
+                <div class="total-linha">
+                    <span>Total</span>
+                    <span id="confirmacaoTotal">R$ 0,00</span>
+                </div>
+            </div>
+
+            <a class="botao-principal" href="/index.html">Voltar para o início</a>
+        </div>
+    </section>
+
+    <footer id="Contato">
+        <div class="footer-conteudo">
+            <div class="footer-bloco">
+                <h4>Pizza e Cia</h4>
+                <p>Forno a lenha e tradição artesanal desde sempre.</p>
+            </div>
+            <div class="footer-bloco">
+                <h4>Contato</h4>
+                <p>(34) 99999-9999</p>
+                <p>contato@pizzaecia.com.br</p>
+            </div>
+            <div class="footer-bloco">
+                <h4>Horário</h4>
+                <p>Terça a domingo</p>
+                <p>18h às 23h</p>
+            </div>
+        </div>
+        <p class="footer-copy">&copy; 2026 Pizza e Cia. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- script.js expõe: PIZZAS, lerCarrinho, salvarCarrinho, formatarPreco -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/supabase-config.js"></script>
+    <script src="/auth.js"></script>
+    <script src="/script.js"></script>
+    <script>
+        const CHAVE_PEDIDOS = "pizzaecia_pedidos";
+
+        function lerPedidos() {
+            return JSON.parse(localStorage.getItem(CHAVE_PEDIDOS)) || [];
+        }
+
+        function salvarPedidos(pedidos) {
+            localStorage.setItem(CHAVE_PEDIDOS, JSON.stringify(pedidos));
+        }
+
+        function montarItensCarrinho() {
+            const carrinho = lerCarrinho();
+            let total = 0;
+            const itens = carrinho.map((item) => {
+                const pizza = PIZZAS.find((p) => p.id === item.id);
+                if (!pizza) return null;
+                const subtotal = pizza.preco * item.qtd;
+                total += subtotal;
+                return { nome: pizza.nome, qtd: item.qtd, subtotal };
+            }).filter(Boolean);
+            return { itens, total };
+        }
+
+        function renderizarResumo() {
+            const { itens, total } = montarItensCarrinho();
+            const lista = document.getElementById("listaResumoPedido");
+            lista.innerHTML = itens.map((item) => `
+                <div class="linha-carrinho">
+                    <div>
+                        <strong>${item.nome}</strong>
+                        <span class="subtotal">x${item.qtd}</span>
+                    </div>
+                    <span>${formatarPreco(item.subtotal)}</span>
+                </div>
+            `).join("");
+            document.getElementById("totalResumoPedido").textContent = formatarPreco(total);
+            return total;
+        }
+
+        // Se veio de uma conta logada, pré-preenche nome
+        async function prePreencherDados() {
+            const sessao = await obterSessaoAtual();
+            if (!sessao) return;
+            const { data: perfil } = await obterPerfil(sessao.user.id);
+            const nome = perfil?.nome || sessao.user.user_metadata?.nome;
+            if (nome) document.getElementById("pedidoNome").value = nome;
+        }
+
+        // Estiliza a opção de pagamento selecionada
+        document.getElementById("opcoesPagamento").addEventListener("change", () => {
+            document.querySelectorAll(".opcao-pagamento").forEach((el) => {
+                el.classList.toggle("selecionada", el.querySelector("input").checked);
+            });
+        });
+
+        document.getElementById("formPedido").addEventListener("submit", (evento) => {
+            evento.preventDefault();
+
+            const nome = document.getElementById("pedidoNome").value;
+            const telefone = document.getElementById("pedidoTelefone").value;
+            const endereco = document.getElementById("pedidoEndereco").value;
+            const pagamentoEl = document.querySelector('input[name="pagamento"]:checked');
+
+            if (!pagamentoEl) {
+                alert("Escolha uma forma de pagamento.");
+                return;
+            }
+
+            const { itens, total } = montarItensCarrinho();
+            if (itens.length === 0) return;
+
+            const pedido = {
+                id: Date.now(),
+                data: new Date().toISOString(),
+                nome,
+                telefone,
+                endereco,
+                pagamento: pagamentoEl.value,
+                itens,
+                total,
+            };
+
+            const pedidos = lerPedidos();
+            pedidos.push(pedido);
+            salvarPedidos(pedidos);
+            salvarCarrinho([]); // esvazia o carrinho
+
+            // Preenche a tela de confirmação
+            document.getElementById("confirmacaoNome").textContent = nome;
+            document.getElementById("confirmacaoTelefone").textContent = telefone;
+            document.getElementById("confirmacaoEndereco").textContent = endereco;
+            document.getElementById("confirmacaoPagamento").textContent = pagamentoEl.value;
+            document.getElementById("confirmacaoItens").innerHTML = itens.map((item) => `
+                <div class="linha-carrinho">
+                    <div><strong>${item.nome}</strong> <span class="subtotal">x${item.qtd}</span></div>
+                    <span>${formatarPreco(item.subtotal)}</span>
+                </div>
+            `).join("");
+            document.getElementById("confirmacaoTotal").textContent = formatarPreco(total);
+
+            document.getElementById("blocoFormulario").classList.add("escondido");
+            document.getElementById("blocoConfirmacao").classList.remove("escondido");
+        });
+
+        // ---------- Inicialização da página ----------
+        (function iniciar() {
+            const { itens } = montarItensCarrinho();
+            if (itens.length === 0) {
+                document.getElementById("blocoFormulario").classList.add("escondido");
+                document.getElementById("blocoCarrinhoVazio").classList.remove("escondido");
+                return;
+            }
+            renderizarResumo();
+            prePreencherDados();
+        })();
+    </script>
+</body>
+</html>
